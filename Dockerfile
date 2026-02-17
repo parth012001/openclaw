@@ -47,13 +47,8 @@ ENV NODE_ENV=production
 # Allow non-root user to write temp files during runtime/tests.
 RUN chown -R node:node /app
 
-# Pre-create volume mount point with correct ownership for Railway
-RUN mkdir -p /data && chown node:node /data
-
-# Security hardening: Run as non-root user
-# The node:22-bookworm image includes a 'node' user (uid 1000)
-# This reduces the attack surface by preventing container escape via root privileges
-USER node
+# Pre-create volume mount point for Railway
+RUN mkdir -p /data
 
 # Start gateway server with default config.
 # Binds to loopback (127.0.0.1) by default for security.

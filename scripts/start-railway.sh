@@ -5,6 +5,9 @@ STATE_DIR="${OPENCLAW_STATE_DIR:-/data/.openclaw}"
 WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-/data/workspace}"
 PORT="${PORT:-18789}"
 
+# Fix Railway volume permissions (mounted as root, container needs node user access)
+chown -R node:node /data
+
 mkdir -p "$STATE_DIR" "$WORKSPACE_DIR"
 
 # Write default config only if one doesn't exist yet.
@@ -30,4 +33,5 @@ if [ ! -f "$STATE_DIR/openclaw.json" ]; then
 EOF
 fi
 
-exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port "$PORT"
+# Drop to node user for the actual process (security hardening)
+exec runuser -u node -- node openclaw.mjs gateway --allow-unconfigured --bind lan --port "$PORT"
