@@ -12,8 +12,9 @@ mkdir -p "$STATE_DIR" "$WORKSPACE_DIR"
 
 # Write default config only if one doesn't exist yet.
 # Enables Slack plugin. Additional plugins can be enabled via the Control UI.
-if [ ! -f "$STATE_DIR/openclaw.json" ]; then
-  cat > "$STATE_DIR/openclaw.json" <<EOF
+# Always write config on boot (overrides stale config on volume).
+# TODO: Switch back to [ ! -f ] check once pairing/auth config is stable.
+cat > "$STATE_DIR/openclaw.json" <<EOF
 {
   "agents": {
     "defaults": {
@@ -27,11 +28,17 @@ if [ ! -f "$STATE_DIR/openclaw.json" ]; then
     }
   },
   "gateway": {
-    "mode": "local"
+    "mode": "local",
+    "controlUi": {
+      "enabled": true,
+      "allowInsecureAuth": true
+    },
+    "auth": {
+      "mode": "token"
+    }
   }
 }
 EOF
-fi
 
 # Drop to node user for the actual process (security hardening)
 exec runuser -u node -- node openclaw.mjs gateway --allow-unconfigured --bind lan --port "$PORT"
