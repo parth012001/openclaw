@@ -3,7 +3,7 @@ services:
     name: openclaw
     runtime: docker
     plan: starter
-    healthCheckPath: /health
+    dockerCommand: bash scripts/start-railway.sh
     envVars:
       - key: PORT
         value: "8080"
@@ -15,6 +15,14 @@ services:
         value: /data/workspace
       - key: OPENCLAW_GATEWAY_TOKEN
         generateValue: true
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: SLACK_BOT_TOKEN
+        sync: false
+      - key: SLACK_APP_TOKEN
+        sync: false
+      - key: NODE_ENV
+        value: "production"
     disk:
       name: openclaw-data
       mountPath: /data
