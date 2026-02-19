@@ -30,6 +30,17 @@ import {
   createGitHubCreateIssueTool,
   createGitHubAddCommentTool,
 } from "./src/github.js";
+import {
+  createNotionSearchTool,
+  createNotionGetPageTool,
+  createNotionCreatePageTool,
+  createNotionAddCommentTool,
+  createNotionQueryDatabaseTool,
+} from "./src/notion.js";
+import {
+  createGranolaListNotesTool,
+  createGranolaGetNoteTool,
+} from "./src/granola.js";
 
 export default function register(api: OpenClawPluginApi) {
   // Jira tools — only register if credentials are configured
@@ -68,5 +79,22 @@ export default function register(api: OpenClawPluginApi) {
     api.registerTool(createGitHubCreateIssueTool() as AnyAgentTool, { optional: true });
     api.registerTool(createGitHubAddCommentTool() as AnyAgentTool, { optional: true });
     api.logger?.info?.("Clawd PM: GitHub tools registered");
+  }
+
+  // Notion tools — only register if token is configured
+  if (process.env.NOTION_TOKEN) {
+    api.registerTool(createNotionSearchTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createNotionGetPageTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createNotionCreatePageTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createNotionAddCommentTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createNotionQueryDatabaseTool() as AnyAgentTool, { optional: true });
+    api.logger?.info?.("Clawd PM: Notion tools registered");
+  }
+
+  // Granola tools — only register if API key is configured
+  if (process.env.GRANOLA_API_KEY) {
+    api.registerTool(createGranolaListNotesTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createGranolaGetNoteTool() as AnyAgentTool, { optional: true });
+    api.logger?.info?.("Clawd PM: Granola tools registered");
   }
 }
