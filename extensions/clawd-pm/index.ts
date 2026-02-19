@@ -47,6 +47,13 @@ import {
   createZendeskGetRecentTicketsTool,
   createZendeskGetTicketStatsTool,
 } from "./src/zendesk.js";
+import {
+  createPostHogQueryTool,
+  createPostHogListInsightsTool,
+  createPostHogGetInsightTool,
+  createPostHogListFeatureFlagsTool,
+  createPostHogGetFeatureFlagTool,
+} from "./src/posthog.js";
 
 export default function register(api: OpenClawPluginApi) {
   // Jira tools — only register if credentials are configured
@@ -111,5 +118,15 @@ export default function register(api: OpenClawPluginApi) {
     api.registerTool(createZendeskGetRecentTicketsTool() as AnyAgentTool, { optional: true });
     api.registerTool(createZendeskGetTicketStatsTool() as AnyAgentTool, { optional: true });
     api.logger?.info?.("Clawd PM: Zendesk tools registered");
+  }
+
+  // PostHog tools — only register if API key and project ID are configured
+  if (process.env.POSTHOG_API_KEY && process.env.POSTHOG_PROJECT_ID) {
+    api.registerTool(createPostHogQueryTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createPostHogListInsightsTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createPostHogGetInsightTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createPostHogListFeatureFlagsTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createPostHogGetFeatureFlagTool() as AnyAgentTool, { optional: true });
+    api.logger?.info?.("Clawd PM: PostHog tools registered");
   }
 }
