@@ -1,0 +1,10 @@
+{
+  "id": "clawd-pm",
+  "name": "Clawd PM",
+  "description": "PM copilot tools: Jira, Linear integration with typed tool definitions.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
