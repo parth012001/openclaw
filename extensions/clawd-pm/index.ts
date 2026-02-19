@@ -22,6 +22,14 @@ import {
   createConfluenceCreatePageTool,
   createConfluenceAddCommentTool,
 } from "./src/confluence.js";
+import {
+  createGitHubListPRsTool,
+  createGitHubGetPRTool,
+  createGitHubListReposTool,
+  createGitHubListIssuesTool,
+  createGitHubCreateIssueTool,
+  createGitHubAddCommentTool,
+} from "./src/github.js";
 
 export default function register(api: OpenClawPluginApi) {
   // Jira tools — only register if credentials are configured
@@ -49,5 +57,16 @@ export default function register(api: OpenClawPluginApi) {
     api.registerTool(createLinearGetProjectsTool() as AnyAgentTool, { optional: true });
     api.registerTool(createLinearAddCommentTool() as AnyAgentTool, { optional: true });
     api.logger?.info?.("Clawd PM: Linear tools registered");
+  }
+
+  // GitHub tools — only register if token is configured
+  if (process.env.GITHUB_TOKEN) {
+    api.registerTool(createGitHubListPRsTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createGitHubGetPRTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createGitHubListReposTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createGitHubListIssuesTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createGitHubCreateIssueTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createGitHubAddCommentTool() as AnyAgentTool, { optional: true });
+    api.logger?.info?.("Clawd PM: GitHub tools registered");
   }
 }
