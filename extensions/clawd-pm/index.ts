@@ -41,6 +41,12 @@ import {
   createGranolaListNotesTool,
   createGranolaGetNoteTool,
 } from "./src/granola.js";
+import {
+  createZendeskSearchTool,
+  createZendeskGetTicketTool,
+  createZendeskGetRecentTicketsTool,
+  createZendeskGetTicketStatsTool,
+} from "./src/zendesk.js";
 
 export default function register(api: OpenClawPluginApi) {
   // Jira tools — only register if credentials are configured
@@ -96,5 +102,14 @@ export default function register(api: OpenClawPluginApi) {
     api.registerTool(createGranolaListNotesTool() as AnyAgentTool, { optional: true });
     api.registerTool(createGranolaGetNoteTool() as AnyAgentTool, { optional: true });
     api.logger?.info?.("Clawd PM: Granola tools registered");
+  }
+
+  // Zendesk tools — only register if credentials are configured
+  if (process.env.ZENDESK_EMAIL && process.env.ZENDESK_API_TOKEN && process.env.ZENDESK_SUBDOMAIN) {
+    api.registerTool(createZendeskSearchTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createZendeskGetTicketTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createZendeskGetRecentTicketsTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createZendeskGetTicketStatsTool() as AnyAgentTool, { optional: true });
+    api.logger?.info?.("Clawd PM: Zendesk tools registered");
   }
 }
