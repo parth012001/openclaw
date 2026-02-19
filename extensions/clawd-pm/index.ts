@@ -54,6 +54,28 @@ import {
   createPostHogListFeatureFlagsTool,
   createPostHogGetFeatureFlagTool,
 } from "./src/posthog.js";
+import {
+  createIntercomSearchConversationsTool,
+  createIntercomGetConversationTool,
+  createIntercomListConversationsTool,
+  createIntercomSearchContactsTool,
+} from "./src/intercom.js";
+import {
+  createAmplitudeGetActiveUsersTool,
+  createAmplitudeGetChartTool,
+  createAmplitudeListCohortsTool,
+  createAmplitudeGetSessionLengthTool,
+  createAmplitudeEventSegmentationTool,
+  createAmplitudeUserSearchTool,
+} from "./src/amplitude.js";
+import {
+  createAsanaSearchTasksTool,
+  createAsanaGetTaskTool,
+  createAsanaCreateTaskTool,
+  createAsanaListProjectsTool,
+  createAsanaGetProjectTool,
+  createAsanaAddCommentTool,
+} from "./src/asana.js";
 
 export default function register(api: OpenClawPluginApi) {
   // Jira tools — only register if credentials are configured
@@ -128,5 +150,36 @@ export default function register(api: OpenClawPluginApi) {
     api.registerTool(createPostHogListFeatureFlagsTool() as AnyAgentTool, { optional: true });
     api.registerTool(createPostHogGetFeatureFlagTool() as AnyAgentTool, { optional: true });
     api.logger?.info?.("Clawd PM: PostHog tools registered");
+  }
+
+  // Intercom tools — only register if token is configured
+  if (process.env.INTERCOM_TOKEN) {
+    api.registerTool(createIntercomSearchConversationsTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createIntercomGetConversationTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createIntercomListConversationsTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createIntercomSearchContactsTool() as AnyAgentTool, { optional: true });
+    api.logger?.info?.("Clawd PM: Intercom tools registered");
+  }
+
+  // Amplitude tools — only register if credentials are configured
+  if (process.env.AMPLITUDE_API_KEY && process.env.AMPLITUDE_SECRET_KEY) {
+    api.registerTool(createAmplitudeGetActiveUsersTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAmplitudeGetChartTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAmplitudeListCohortsTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAmplitudeGetSessionLengthTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAmplitudeEventSegmentationTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAmplitudeUserSearchTool() as AnyAgentTool, { optional: true });
+    api.logger?.info?.("Clawd PM: Amplitude tools registered");
+  }
+
+  // Asana tools — only register if credentials are configured
+  if (process.env.ASANA_TOKEN && process.env.ASANA_WORKSPACE_GID) {
+    api.registerTool(createAsanaSearchTasksTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAsanaGetTaskTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAsanaCreateTaskTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAsanaListProjectsTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAsanaGetProjectTool() as AnyAgentTool, { optional: true });
+    api.registerTool(createAsanaAddCommentTool() as AnyAgentTool, { optional: true });
+    api.logger?.info?.("Clawd PM: Asana tools registered");
   }
 }
