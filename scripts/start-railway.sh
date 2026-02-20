@@ -10,6 +10,13 @@ chown -R node:node /data
 
 mkdir -p "$STATE_DIR" "$WORKSPACE_DIR"
 
+# Copy Captain prompt files (always overwrite so repo updates take effect on redeploy)
+PROMPTS_DIR="/app/extensions/clawd-pm/prompts"
+if [ -d "$PROMPTS_DIR" ]; then
+  cp "$PROMPTS_DIR/SOUL.md" "$WORKSPACE_DIR/SOUL.md"
+  cp "$PROMPTS_DIR/TOOLS.md" "$WORKSPACE_DIR/TOOLS.md"
+fi
+
 # Write default config only if one doesn't exist yet.
 # Enables Slack plugin. Additional plugins can be enabled via the Control UI.
 if [ ! -f "$STATE_DIR/openclaw.json" ]; then
